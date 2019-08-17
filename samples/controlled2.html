@@ -1,0 +1,214 @@
+<!DOCTYPE html><html><head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample - Controlled 2</title>
+    
+    <!-- page CSS -->
+    <style>
+      	body {background-color:#d9e2eb;color:black;font-size:16px;}
+		body * {box-sizing:border-box;}
+		#root {
+			position:fixed;
+			width:100%;
+			height:100%;
+			font-family:Arial, Helvetica, Sans-Serif;
+			font-weight:bold;
+		}
+		.button {
+			flex:1,
+			position:relative;
+			margin:auto;
+			background-color:#3b4148;
+			padding:1.5vmax 3vmax 1.5vmax 3vmax;
+			border-radius:1vmin;
+			border:solid 2px #222;
+			color:#ccc;
+			cursor:pointer;
+			user-select:none;
+			box-shadow:0px 0px 4px #333;
+		}
+		.button:hover, .button.active {
+			border-color:#000;
+			color:#eee;
+			background-color:#555a60;
+		}
+		.button.active {
+			border-color:#79d11f;
+		}
+		#title {
+			position:absolute;
+			top:0px;
+			left:0px;
+			width:100%;
+			height:12.5%;
+			display:grid;
+			align-content:center;
+			justify-content:center;
+			font-size:1.5rem;
+		}
+		#container {
+			display:flex;
+			position:absolute;
+			flex-direction:column;
+			width:80%;
+			height:80%;
+			top:5%;
+			bottom:0;
+			left:0;
+			right:0;
+			margin:auto;
+			border:solid 2px #666;
+			border-width:0px 2px 0px 2px;
+			background-color:#EBF0F5;
+		}
+		#row-top, #row-bottom {
+			display:flex;
+			position:relative;
+			flex:1;
+			max-height:100px;
+			background-color:rgba(0,0,0,.2);
+			border:solid 1px #666;
+			border-width:2px 0px 2px 0px;
+			align-content:center;
+			justify-content:center;
+		}
+		#row-middle {
+			display:gird;
+			flex:1;
+			overflow:hidden;
+		}
+		#split-items {
+			display:grid;
+			height:100%;
+			grid-template-columns:repeat(5, 5vmin);
+			grid-template-rows:repeat(5, 5vmin);
+			grid-gap:1.5vmin;
+			align-content:center;
+			justify-content:center;
+			padding:1.5vmin;
+		}
+		#split-items>div {
+			width:100%;
+			height:100%;
+			border:solid 2px #666;
+			background-color:#79d11f;
+			background:radial-gradient(ellipse closest-side at 50% 50%,rgba(158,255,60,1) 0%,rgba(99,181,15,1) 100%);
+			box-shadow:0px 0px 4px #333;
+		}
+	</style>
+
+</head>
+<body>
+
+    <div id="root"></div>
+    
+	<!-- React and Babel -->
+	<script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+	<script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+	<script src = "https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js" crossorigin></script>
+	
+	<!-- @plutonium-js/react-atomic component -->
+	<script src="https://cdn.jsdelivr.net/npm/@plutonium-js/react-atomic-split@1/dist/bundle.min.js"></script>
+	<!-- sample script -->
+	<script type="text/babel">
+		class App extends React.Component{
+			constructor(props) {
+				super(props);
+				this.state = {
+					keyframes:`
+						from {opacity:0;transform:translateX(30vw);}
+						to {opacity:1;transform:translateY(0vw);}
+					`,
+					buttons:{
+						toggleRotation:{
+							active:false,
+							addClassNames:''
+						}
+					}
+				}
+			}
+			render() {
+				const AtomicSplit = window["react-atomic-split"].default;
+				let items=[]; for (var i=0;i<25;i++) items.push(<div></div>);
+				return <React.Fragment>
+					<div id="title">CSS Key Frames Sample</div>
+					<div id="container">
+						<div id="row-top">
+							<div
+								className = "button"
+								onClick = {e => {
+									this.AtomicSplitRef.current.setPlayState('running');
+								}}
+							>Run</div>
+							<div
+								className = "button"
+								onClick = {e => {
+									this.AtomicSplitRef.current.setPlayState('paused');
+								}}
+							>Pause</div>
+							<div
+								className = "button"
+								onClick = {e => {
+									this.AtomicSplitRef.current.setPlayState('reset');
+								}}
+							>Reset</div>
+							<div
+								className = "button"
+								onClick = {e => {
+									this.AtomicSplitRef.current.setPlayState('cancel');
+								}}
+							>Cancel</div>
+						</div>
+						<div id="row-middle">
+							<AtomicSplit
+								id = "split-items"
+								ref = {this.AtomicSplitRef=React.createRef()}
+								animate = {{
+									nodes:{
+										keyframes:{
+											val:this.state.keyframes,
+											defaultStyles:'opacity:0;'
+										},
+										animation:"1s ease both",
+										playState:'running',
+										stagger:{
+											duration:2000,
+											easeType:'linear',
+											direction:'normal',
+											delay:1000
+										}
+									}
+								}}
+							>{items}</AtomicSplit>
+						</div>
+						<div id="row-bottom">
+							<div
+								className = {("button "+this.state.buttons.toggleRotation.addClassNames).trim()}
+								onClick = {e => {
+									const active = !this.state.buttons.toggleRotation.active;
+									this.setState({
+										keyframes:active?`
+											from {opacity:0;transform:translateX(30vw) rotate(0deg);}
+											to {opacity:1;transform:translateY(0vw) rotate(360deg);}
+										`:`
+											from {opacity:0;transform:translateX(30vw);}
+											to {opacity:1;transform:translateY(0vw);}
+										`,
+										buttons:{toggleRotation:{
+											active:active,
+											addClassNames:active?'active':''
+										}}
+									});
+								}}
+							>Toggle Rotation</div>
+						</div>
+					</div>
+				</React.Fragment>;
+			}
+		}
+		ReactDOM.render(<App/>, document.querySelector('#root'));
+	</script>
+	
+</body>
+</html>

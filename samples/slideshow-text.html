@@ -1,0 +1,123 @@
+<!DOCTYPE html><html><head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample - slideshow Text</title>
+    
+    <!-- page CSS -->
+    <style>
+      	body {background-color:#d9e2eb;color:black;}
+		body * {box-sizing:border-box;}
+		#root {
+			position:fixed;
+			width:100%;
+			height:100%;
+		}
+		#container {
+			position:absolute;
+			overflow:hidden;
+			width:30%;
+			height:30%;
+			top:0;
+			bottom:0;
+			left:0;
+			right:0;
+			margin:auto;
+			border:dashed 4px #666;
+			font-family:Impact, Charcoal, Sans-Serif;
+			font-size:4.5vmin;
+			background-color:#EBF0F5;
+		}
+		#messages {
+			position:absolute;
+			width:100%;
+			top:50%;
+			transform:translateY(-50%);
+			text-align:center;
+			padding:1rem;
+		}
+	</style>
+
+</head>
+<body>
+
+    <div id="root"></div>
+    
+	<!-- React and Babel -->
+	<script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+	<script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+	<script src = "https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js" crossorigin></script>
+	
+	<!-- @plutonium-js/react-atomic-split component -->
+	<script src="https://cdn.jsdelivr.net/npm/@plutonium-js/react-atomic-split@1/dist/bundle.min.js"></script>
+	<!-- sample script -->
+	<script type="text/babel">
+		class App extends React.Component{
+			constructor(props) {
+				super(props);
+				this.messages = [
+					'Plutonium Atomic Split!',
+					'Split child text, elements, and React components.',
+					'Animate nodes, words, characters, and spaces',
+					'Use pure CSS keyframes or transitions',
+					'Control animations using the setPlayState API method.'
+				]
+				this.transitions = {
+					_in:{
+						opacity:{from:0, to:1},
+						transform:{from:'translateX(30vw)', to:'translateX(0vw)'}
+					},	
+					_out:{
+						opacity:{from:1, to:0},
+						transform:{from:'translateX(0vw)', to:'translateX(-30vw)'}
+					}
+				}
+				this.state = {
+					message:null,
+					transitions:null
+				}
+			}
+			componentDidMount() {
+				//start the slideshow (optional delay)
+				setTimeout(() => this._run(0,'in'), 1000);
+			}
+			render() {
+				const AtomicSplit = window["react-atomic-split"].default;
+				return <div id="container">
+					<AtomicSplit
+						id = "messages"
+						animate = {{
+							chrs:{
+								transitions:this.state.transitions,
+								animation:"1s ease",
+								playState:'running',
+								stagger:{
+									duration:500,
+									easeType:'ease'
+								}
+							}
+						}}
+						onAnimateChrsEnd = {e => {
+							//run the next in or out animation (optionally specify a message delay time)
+							if (this.direction==='in') setTimeout(() => this._run(this.index,'out'), 2000);
+							else requestAnimationFrame(() => this._run((this.index+1)%this.messages.length,'in'));
+						}}
+					>{this.state.message}</AtomicSplit>
+				</div>;
+			}
+			
+			//run an animation
+			_run(index, direction) {
+				this.setState({
+					message:this.messages[index],
+					transitions:this.transitions["_"+direction]
+				});
+				this.index = index;
+				this.direction = direction;
+			}
+		}
+		ReactDOM.render(<App/>, document.querySelector('#root'));
+	</script>
+	
+</body>
+</html>

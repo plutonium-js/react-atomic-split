@@ -1,0 +1,87 @@
+<!DOCTYPE html><html><head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample - Simple Text</title>
+    
+    <!-- page CSS -->
+    <style>
+      	body {background-color:#d9e2eb;color:black;}
+		body * {box-sizing:border-box;}
+		#root {
+			position:fixed;
+			width:100%;
+			height:100%;
+		}
+		#container {
+			position:absolute;
+			overflow:hidden;
+			width:30%;
+			height:30%;
+			top:0;
+			bottom:0;
+			left:0;
+			right:0;
+			margin:auto;
+			border:dashed 4px #666;
+			font-family:Impact, Charcoal, Sans-Serif;
+			font-size:4.5vmin;
+			background-color:#EBF0F5;
+		}
+		#message {
+			position:absolute;
+			width:100%;
+			top:50%;
+			transform:translateY(-50%);
+			text-align:center;
+			padding:1rem;
+		}
+		
+	</style>
+
+</head>
+<body>
+
+    <div id="root"></div>
+    
+	<!-- React and Babel -->
+	<script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+	<script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+	<script src = "https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js" crossorigin></script>
+	
+	<!-- @plutonium-js/react-atomic-split component -->
+    <script src="https://cdn.jsdelivr.net/npm/@plutonium-js/react-atomic-split@1/dist/bundle.min.js"></script>
+	<!-- sample script -->
+	<script type="text/babel">
+		class App extends React.Component{
+			constructor(props) {
+				super(props);
+			}
+			render() {
+				const AtomicSplit = window["react-atomic-split"].default;
+				return <div id="container">
+					<AtomicSplit
+						id = "message"
+						animate = {{
+							chrs:{
+								transitions:{
+									opacity:{from:0, to:1},
+									transform:{from:'translateX(30vw)', to:'translateX(0vw)'}
+								},
+								animation:"2s ease",
+								playState:'running',
+								stagger:{
+									duration:1000,
+									easeType:'ease'
+								}
+							}
+						}}
+					>Plutonium Split Text!</AtomicSplit>
+				</div>;
+			}
+		}
+		ReactDOM.render(<App/>, document.querySelector('#root'));
+	</script>
+	
+</body>
+</html>
