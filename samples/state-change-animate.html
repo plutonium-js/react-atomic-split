@@ -1,0 +1,131 @@
+<!DOCTYPE html><html><head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample - State Change Animate</title>
+    
+    <!-- page CSS -->
+    <style>
+      	body {background-color:#d9e2eb;color:black;}
+		body * {box-sizing:border-box;}
+		#root {
+			position:fixed;
+			width:100%;
+			height:100%;
+		}
+		#container {
+			position:absolute;
+			overflow:hidden;
+			width:50%;
+			height:50%;
+			top:0;
+			bottom:0;
+			left:0;
+			right:0;
+			margin:auto;
+			border:dashed 4px #666;
+			font-family:Impact, Charcoal, Sans-Serif;
+			font-size:8vmin;
+			background-color:#EBF0F5;
+			
+		}
+		#message {
+			position:absolute;
+			width:100%;
+			top:50%;
+			transform:translateY(-50%);
+			text-align:center;
+			padding:1rem;
+			color:#EBF0F5;
+			cursor:pointer;
+			user-select:none;
+			text-stroke-width:1px;
+			text-stroke-color:black;
+			-webkit-text-stroke-width:1px;
+			-webkit-text-stroke-color:black;
+		}
+	</style>
+
+</head>
+<body>
+
+    <div id="root"></div>
+    
+	<!-- React and Babel -->
+	<script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+	<script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+	<script src = "https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js" crossorigin></script>
+	
+	<!-- @plutonium-js/react-atomic-split component -->
+    <script src="https://cdn.jsdelivr.net/npm/@plutonium-js/react-atomic-split@1/dist/bundle.min.js"></script>
+	<!-- sample script -->
+	<script type="text/babel">
+		class App extends React.Component{
+			constructor(props) {
+				super(props);
+				this.state = {
+					color:{
+						from:'#EBF0F5',
+						to:'black'
+					}
+				}
+			}
+			render() {
+				const AtomicSplit = window["react-atomic-split"].default;
+				return <div id="container">
+					<AtomicSplit
+						id = "message"
+						animate = {{
+							chrs:{
+								transitions:{
+									transform:{from:'rotate(0deg)', to:'rotate(360deg)'},
+									color:this.state.color
+								},
+								animation:".5s ease",
+								playState:'running',
+								stagger:{
+									duration:1000,
+									easeType:'ease'
+								}
+							}
+						}}
+						onClick = {e => {
+							//set the color to a new random RGB value
+							const ro = Math.round, ra = Math.random, s = 255;
+							this.setState({
+								color:{
+									from:this.state.color.to,
+									to:'rgb('+ro(ra()*s)+','+ro(ra()*s)+','+ro(ra()*s)+')'
+								}
+							});
+						}}
+					>Click me to change the color state.</AtomicSplit>
+				</div>;
+			}
+		}
+		ReactDOM.render(<App/>, document.querySelector('#root'));
+	</script>
+	
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

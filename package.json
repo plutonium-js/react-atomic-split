@@ -1,6 +1,6 @@
 {
 	"name": "@plutonium-js/react-atomic-split",
-	"version": "1.0.0",
+	"version": "1.0.2",
 	"description": "An advanced React component that adds staggered animation capabilities to child elements and components.  Optionally split child text into animatable component characters and words!",
 	"main": "dist/bundle.js",
 	"scripts": {

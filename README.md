@@ -11,10 +11,10 @@ An advanced React component that adds staggered animation capabilities to child 
 
 ### Links
 
-* [Atomic Split Home](https://plutonium.dev/wp/libraries/react-atomic-split/)
+* [Atomic Split Home](https://plutonium.dev/wp/libraries/react-atomic-split)
    * [Documentation](https://plutonium.dev/wp/libraries/react-atomic-split/documentation)
    * [API](https://plutonium.dev/wp/libraries/react-atomic-split/api)
-
+* [Atomic Home](https://plutonium.dev/wp/libraries/react-atomic)
 
 ### Bookmarks
 * [Installation](#Installation)
@@ -57,13 +57,11 @@ An advanced React component that adds staggered animation capabilities to child 
 ### <a id="create_component"></a>Create Component
 To create a basic Atomic Split component, add the 'AtomicSplit' tag to your JSX. The child content can be any text, elements, or other React components.
 ```jsx
-class App extends Component {
    render() {
       return (
-         <AtomicSplit>your content here</AtomicSplit>
+         <AtomicSplit>your content here</AtomicSplit>;
       );
    }
-}
 ```
 
 **[:arrow_up_small:](#bookmarks)**	
@@ -72,26 +70,35 @@ class App extends Component {
 To animate an Atomic Split component add the animate property. The example below splits the text and stagger animates each character into place with a fade in / slide motion.
 ```jsx
 render() {
-   return <div id="container">
-      <AtomicSplit
-         animate = {{
-            chrs:{
-               transitions:{
-                  opacity:{from:0, to:1},
-                  transform:{from:'translateX(30vw)', to:'translateX(0vw)'}
-               },
-               animation:"2s ease",
-               playState:'running',
-               stagger:{
-                  duration:1000,
-                  easeType:'ease'
-               }
+   return <AtomicSplit
+      animate = {{
+         chrs:{
+            transitions:{
+               opacity:{from:0, to:1},
+               transform:{from:'translateX(30vw)', to:'translateX(0vw)'}
+            },
+            animation:"2s ease",
+            playState:'running',
+            stagger:{
+               duration:1000,
+               easeType:'ease'
             }
-         }}
-      >Plutonium Split Text!</AtomicSplit>
-   </div>;
+         }
+      }}
+   >Plutonium Split Text!</AtomicSplit>;
 }
 ```
+The example above animates the characters group ('chrs'). A single group or combinations of multiple groups can be animated. Allowable groups include...
+   * <strong>root</strong> - The root compnoent element.
+   * <strong>all</strong> - All child nodes, characters, words, and spaces.
+   * <strong>nodes</strong> - All child elements and components.
+   * <strong>chrs</strong> - All child characters.
+   * <strong>words</strong> - All child words.
+   * <strong>spaces</strong> - All child spaces.
+
+For additional information on how to define <strong>key frames</strong> and <strong>transitions</strong> refer to the base React Atomic documenation…
+
+[React Atomic - Key Frames or Transitions](https://plutonium.dev/wp/libraries/react-atomic/documentation/#key_frames_or_transitions)
 
 **[:arrow_up_small:](#bookmarks)**	
 

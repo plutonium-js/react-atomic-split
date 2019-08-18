@@ -77,6 +77,8 @@ export class AtomicSplit extends Atomic {
 						if (type==='reset') {
 							_T.asyncRefs.cancel("runAnims_"+group);
 							_T.asyncRefs.add("reset_"+group, "requestAnimationFrame", requestAnimationFrame(() => {
+								//note: force reflow here to ensure the running class is applied by the browser on the next animation frame
+								_T.rootRef.current.offsetWidth;
 								_T.asyncRefs.add("reset_"+group, "requestAnimationFrame", requestAnimationFrame(() => {_set( params.resetToPlayState||'running', group)}));
 							}));
 						}
@@ -282,10 +284,11 @@ class AtomicSplitItem extends Atomic{
 				const groupObj =  this._OWNER.split[group];
 				const items = groupObj.items;
 				const len = items.length;
-				const isFrom = animateGroup.transitions && groupObj.playState==='paused';
 				const animation = this._LIB.animate.animations[this.props.type+'s'];
+				let isReverse = (animateGroup.stagger||{}).direction==='reverse';
+				isReverse = (animateGroup.transitions&&groupObj.playState===(isReverse?'running':'paused')) || (animateGroup.keyframes&&isReverse);
 				this.endedCount++; if (this.endedCount==animation.qty) {
-					if ((!isFrom && this===items[len-1] || (group==='all' && this===items[len-2])) || (isFrom && this===items[0])) {
+					if ((!isReverse && this===items[len-1] || (group==='all' && this===items[len-2])) || (isReverse && this===items[0])) {
 						groupObj.animated = false;
 						groupObj.stagger.ended = true;
 						if ((this._OWNER.props.animate[group]||{}).keyframes) this._OWNER._resetStagger(group);
